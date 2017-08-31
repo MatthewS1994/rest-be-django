@@ -24,16 +24,20 @@ appRootPath = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 class ServerHealthCheck(APIView):
     def get(self, request, *args, **kwargs):
-        module = self.request.GET['module']
-        output = subprocess.Popen(
-            appRootPath + modulesSubPath + " " + module,
-            shell=True,
-            stdout=subprocess.PIPE)
-        data = output.communicate()[0]
-        test = data.replace("\\", '')
-        report = test.replace("\\", '')
-        reports = json.loads(report)
-        return Response(reports)
+        if 'module' in request.GET:
+            module = self.request.GET['module']
+            output = subprocess.Popen(
+                appRootPath + modulesSubPath + " " + module,
+                shell=True,
+                stdout=subprocess.PIPE)
+            data = output.communicate()[0]
+            test = data.replace("\\", '')
+            report = test.replace("\\", '')
+            reports = json.loads(report)
+            return Response(reports)
+        else:
+            Response({}, status=200)
+
 
 
 class RabbitMQServerHealthChaeck(APIView):
@@ -56,4 +60,5 @@ class RabbitMQServerHealthChaeck(APIView):
             return Response(data, status=200)
         except Exception as e:
             print e
+            return Response({}, status=500)
 

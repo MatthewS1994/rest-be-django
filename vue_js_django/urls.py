@@ -16,9 +16,21 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.authtoken import views
+from rest_framework import routers
+from app_modules.users.views import AccountViewSet
+from app_modules.server.views import ServerHealthCheck
+from app_modules.endpoints.viewsets import WeatherViewSet
+
+# Create a router and register our viewsets with it.
+router = routers.DefaultRouter()
+router.register(r'accounts', AccountViewSet)
+router.register(r'servers', ServerHealthCheck, base_name='server')
+router.register(r'weather', WeatherViewSet, base_name='weather')
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^ht/', include('app_modules.health_check.urls', namespace='heath_check_framework')),

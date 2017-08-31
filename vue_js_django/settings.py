@@ -15,12 +15,19 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+AUTH_USER_MODEL = 'users.Account'
+
+REGISTRATION_OPEN = True  # If True, users can register
+ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window; you may, of course, use a different value.
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,14 +51,8 @@ INSTALLED_APPS = [
 
     'app_modules.users',
     'app_modules.server',
+    'app_modules.endpoints',
     'app_modules.health_check',
-
-    # Health Check Plugins
-    'app_modules.health_check.db',
-    # 'apps.server.health_check.cache',
-    'app_modules.health_check.storage',
-    # 'apps.server.health_check.contrib.celery',              # requires celery
-    # 'apps.server.health_check.contrib.s3boto_storage',
 
     # 3rd Party
     'rest_framework',
@@ -97,12 +98,12 @@ WSGI_APPLICATION = 'vue_js_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': os.environ.get('BD_ENGINE'),
+        'NAME': os.environ.get('BD_NAME'),
+        'USER': os.environ.get('BD_USER'),
+        'PASSWORD': os.environ.get('BD_PASSWORD'),
+        'HOST': os.environ.get('BD_HOST'),
+        'PORT': os.environ.get('BD_PORT'),
     }
 }
 
@@ -146,13 +147,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-BROKER_BACKEND = 'amqp'
-BROKER_URL = ''
+BROKER_BACKEND = os.environ.get('BROKER_BACKEND')
+BROKER_URL = os.environ.get('BROKER_URL')
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_BACKEND = BROKER_URL
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = False
 CELERY_ALWAYS_EAGER = False
-CELERY_RESULT_BACKEND = "amqp"
+CELERY_RESULT_BACKEND = os.environ.get('BROKER_BACKEND')
 DEFAULT_CELERY_RETRY_DELAY = int('60')  # 1 minute
 DEFAULT_CELERY_MAX_RETRIES = int('5')
 
@@ -179,8 +180,8 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:5000',
 )
 
-RABBITMQ_DEFAULT_USER=''
-RABBITMQ_DEFAULT_PASS=''
-RABBITMQ_DEFAULT_VHOST=''
-RABBITMQ_DEFAULT_HOST=''
-RABBITMQ_DEFAULT_WEB_API=''
+RABBITMQ_DEFAULT_USER = os.environ.get('RABBITMQ_DEFAULT_USER')
+RABBITMQ_DEFAULT_PASS = os.environ.get('RABBITMQ_DEFAULT_PASS')
+RABBITMQ_DEFAULT_VHOST = os.environ.get('RABBITMQ_DEFAULT_VHOST')
+RABBITMQ_DEFAULT_HOST = os.environ.get('RABBITMQ_DEFAULT_HOST')
+RABBITMQ_DEFAULT_WEB_API = os.environ.get('RABBITMQ_DEFAULT_WEB_API')
