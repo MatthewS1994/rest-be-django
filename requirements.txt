@@ -15,7 +15,7 @@ django-autoslug==1.9.3
 django-celery==3.2.1
 django-cors-headers==2.1.0
 django-filter==1.0.4
-djangorestframework==3.6.4
+djangorestframework==3.11.2
 enum34==1.1.6
 Fabric==1.14.0
 idna==2.6
